@@ -1,0 +1,29 @@
+from os import environ, path
+from dotenv import load_dotenv
+from flask import Flask
+from config import app_config
+
+"""
+Get the env file to configure current environment
+"""
+base_dir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(base_dir, ".env"))
+
+def init_app():
+    """ Initialize Core components of the Flask API Application """
+    app = Flask(__name__, instance_relative_config=False)
+
+    # Get the environment the API is running in
+    app_env = environ.get('APPLICATION_ENV')
+    # Configure flask based on the environment variable in the .env file
+    app.config.from_object(app_config[app_env])
+    app.config.from_pyfile('../config.py')
+
+    with app.app_context():
+        # include the routes
+        from .controllers.home import home_controller
+
+        # register all blueprints
+        app.register_blueprint(home_controller.home_bp)
+
+        return app
