@@ -22,8 +22,10 @@ def init_app():
     with app.app_context():
         # include the routes
         from .controllers.home import home_controller
+        from .controllers.general_classification import general_classification_controller
 
         # register all blueprints
         app.register_blueprint(home_controller.home_bp)
+        app.register_blueprint(general_classification_controller.general_classification_bp)
 
         return app

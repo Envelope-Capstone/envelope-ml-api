@@ -1,23 +1,23 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
-from api.services.data_preprocessing_service import DataPreproccessingService
-import pandas as pd
+from api.services.classification_service import ClassificationModel
+import numpy as np
 
 
 general_classification_bp = Blueprint('general_classification_bp', __name__)
 
 # Services
-preprocessing_service = DataPreproccessingService()
+model_service = ClassificationModel()
+print('Call to initialize classification model')
 
 @general_classification_bp.route('/classify_trx', methods=['POST'])
 def classify_trx():
     # get the body of the request
-    trx_content = request.get_json()
-    # Convert it to a DF
-    df = pd.DataFrame(trx_content)
-    # Clean the data
-    unp_df = preprocessing_service.clean_data()
+    trx_data = request.get_json()
+
+    # run the classification ml model
+    classified_trx = model_service.classify_transactions(trx_data)
 
     # return classified data
-    return jsonify(unp_df)
+    return jsonify(classified_trx)
