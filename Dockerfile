@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.8-slim-buster
+FROM ubuntu:20.04
 
 EXPOSE 5000
 
@@ -9,9 +9,18 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
+ENV FLASK_ENV='production'
+
+RUN apt-get update && apt-get install -y python3 python3-pip 
+
+# set python command to work with python3
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/bin/pip3 /usr/bin/pip
+
+
 # Install pip requirements
 COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 WORKDIR /app
 COPY . /app
@@ -21,4 +30,4 @@ RUN useradd appuser && chown -R appuser /app
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "envelope-ml-api.wsgi:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]

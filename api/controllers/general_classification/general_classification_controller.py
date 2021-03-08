@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import request
 from flask import jsonify
 from api.services.classification_service import ClassificationModel
-import numpy as np
+from api.decorators.require_jwt import require_jwt
 
 
 general_classification_bp = Blueprint('general_classification_bp', __name__)
@@ -11,7 +11,9 @@ general_classification_bp = Blueprint('general_classification_bp', __name__)
 model_service = ClassificationModel()
 print('Call to initialize classification model')
 
+
 @general_classification_bp.route('/classify_trx', methods=['POST'])
+@require_jwt
 def classify_trx():
     # get the body of the request
     trx_data = request.get_json()
