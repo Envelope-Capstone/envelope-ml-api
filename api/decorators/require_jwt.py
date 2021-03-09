@@ -3,8 +3,8 @@ from flask import request, abort
 import json
 import requests
 
-jwt_validate_url = 'https://envelope-auth-api.azurewebsites.net/token/validate'
-jwt_refresh_url = 'https://envelope-auth-api.azurewebsites.net/token/refresh'
+jwt_validate_url = 'https://envelopeauthapi.azurewebsites.net/token/validate'
+jwt_refresh_url = 'https://envelopeauthapi.azurewebsites.net/token/refresh'
 
 def require_jwt(controller_func):
     @wraps(controller_func)
