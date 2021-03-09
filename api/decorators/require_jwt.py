@@ -15,7 +15,7 @@ def require_jwt(controller_func):
         validation_resp = requests.post(jwt_validate_url, json=body, headers={'Content-Type':'application/json'})
         
         # Check if status code is 401 and if so end request
-        if validation_resp.status_code == 401:
+        if validation_resp.status_code == 401 or validation_resp.status_code == 500:
             return {'message': 'User is unauthorized to access this endpoint.'}, 401
 
         return controller_func(*args, **kwargs)
